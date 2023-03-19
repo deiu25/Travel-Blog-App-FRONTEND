@@ -7,7 +7,8 @@ import axios from "axios";
 import { Provider } from "react-redux";
 import { store } from "./store";
 
-axios.defaults.baseURL = "http://localhost:5000";
+// axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL = "https://deiu-alexandra.onrender.com";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
