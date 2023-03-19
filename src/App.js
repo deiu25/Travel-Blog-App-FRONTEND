@@ -14,7 +14,8 @@ function App() {
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
   console.log(isLoggedIn);
 
-  const dispatch1 = useCallback(useDispatch(), []);
+  const dispatch1 = useCallback(useDispatch(), [dispatch]);
+
   useEffect(() => {
     if (localStorage.getItem("userId")) {
       dispatch1(authActions.login());
