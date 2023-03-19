@@ -14,12 +14,16 @@ function App() {
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
   console.log(isLoggedIn);
 
-  const dispatch1 = useCallback(useDispatch(), [dispatch]);
+  const dispatch = useDispatch(); // import useDispatch from react-redux
+
+  const dispatch1 = useCallback(() => {
+    if (localStorage.getItem("userId")) {
+      dispatch(authActions.login());
+    }
+  }, [dispatch]);
 
   useEffect(() => {
-    if (localStorage.getItem("userId")) {
-      dispatch1(authActions.login());
-    }
+    dispatch1();
   }, [dispatch1]);
 
   return (
