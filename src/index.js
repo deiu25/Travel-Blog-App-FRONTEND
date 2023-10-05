@@ -7,7 +7,7 @@ import axios from "axios";
 import { Provider } from "react-redux";
 import { store } from './auth/redux/store';
 
-axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL = "https://travel-backend-shv1.onrender.com";
 axios.defaults.withCredentials = true;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
