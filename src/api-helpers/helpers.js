@@ -1,6 +1,29 @@
-import axios from "axios";
+import api from "./api";
+
+export const addPost = async (formData) => {
+  console.log('formData:', formData); 
+  try {
+    const res = await api.post("/posts/", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log('Răspuns de la server:', res);
+
+    if (res.status !== 201) {
+      console.error("A apărut o eroare: starea răspunsului nu este 201");
+      return null;
+    }
+
+    return res.data.post;
+  } catch (err) {
+    console.error("A apărut o eroare în timpul adăugării postării:", err);
+    return null;
+  }
+};
+
 export const getAllPosts = async () => {
-  const res = await axios.get("/posts");
+  const res = await api.get("/posts");
   if (res.status !== 200) {
     return console.log("Some Error Occurred");
   }
@@ -9,44 +32,8 @@ export const getAllPosts = async () => {
   return data;
 };
 
-export const sendAuthRequest = async (signup, data) => {
-  const res = await axios
-    .post(`/user/${signup ? "signup" : "login"}/`, {
-      name: data.name ? data.name : "",
-      email: data.email,
-      password: data.password,
-    })
-    .catch((err) => console.log(err));
-
-  if (res.status !== 200 && res.status !== 201) {
-    return console.log("Unable to Authenticate");
-  }
-  const resData = await res.data;
-  return resData;
-};
-
-export const addPost = async (data) => {
-  const res = await axios
-    .post("/posts/", {
-      title: data.title,
-      description: data.description,
-      location: data.location,
-      image: data.imageUrl,
-      date: data.date,
-      user: localStorage.getItem("userId"),
-    })
-    .catch((err) => console.log(err));
-
-  if (res.status !== 201) {
-    return console.log("Error Occurred");
-  }
-
-  const resData = await res.data;
-  return resData;
-};
-
 export const getPostDetails = async (id) => {
-  const res = await axios.get(`/posts/${id}`).catch((err) => console.log(err));
+  const res = await api.get(`/posts/${id}`).catch((err) => console.log(err));
   if (res.status !== 200) {
     return console.log("Unable to fetch diary");
   }
@@ -55,45 +42,52 @@ export const getPostDetails = async (id) => {
   return resData;
 };
 
-export const postUpdate = async (data, id) => {
-  const res = await axios
-    .put(`/posts/${id}`, {
-      title: data.title,
-      description: data.description,
-      location: data.location,
-      image: data.imageUrl,
-    })
-    .catch((err) => console.log(err));
+export const updatePost = async (id, formData) => {
+  try {
+    const res = await api.put(`/posts/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-  if (res.status !== 200) {
-    return console.log("Unable to udpate");
+    if (res.status !== 200) {
+      console.error("A apărut o eroare: starea răspunsului nu este 200");
+      return null;
+    }
+
+    return res.data.post;
+  } catch (err) {
+    console.error("A apărut o eroare în timpul actualizării postării:", err);
+    return null;
   }
-
-  const resData = await res.data;
-  return resData;
 };
 
-export const postDelete = async (id) => {
-  const res = await axios
-    .delete(`/posts/${id}`)
-    .catch((err) => console.log(err));
+export const deleteImage = async (public_id) => {
+  try {
+    const res = await api.delete(`/images/${public_id}`);
 
-  if (res.status !== 200) {
-    return console.log("Unable to delete");
+    if (res.status !== 200) {
+      console.error("A apărut o eroare: starea răspunsului nu este 200");
+      return null;
+    }
+
+    return res.data;
+  } catch (err) {
+    console.error("A apărut o eroare în timpul ștergerii imaginii:", err);
+    return null;
   }
-
-  const resData = await res.data;
-  return resData;
 };
 
-export const getUserDetails = async () => {
-  const id = localStorage.getItem("userId");
-  const res = await axios.get(`/user/${id}`).catch((err) => console.log(err));
-
-  if (res.status !== 200) {
-    return console.log("No user found");
+export const deletePost = async (id) => {
+  try {
+    const res = await api.delete(`/posts/${id}`);
+    if (res.status !== 200) {
+      console.error("A apărut o eroare: starea răspunsului nu este 200");
+      return null;
+    }
+    return res.data;
+  } catch (err) {
+    console.error("A apărut o eroare în timpul ștergerii postării:", err);
+    return null;
   }
-
-  const resData = await res.data;
-  return resData;
 };

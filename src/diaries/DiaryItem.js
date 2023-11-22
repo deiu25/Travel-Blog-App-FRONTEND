@@ -1,110 +1,136 @@
+import React, { useState } from "react";
+import { deletePost } from "../api-helpers/helpers";
 import {
   Alert,
-  Card,
   CardActions,
-  CardContent,
-  CardMedia,
   IconButton,
   Snackbar,
-  Typography
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
 } from "@mui/material";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { postDelete } from "../api-helpers/helpers";
+import TitleIcon from "@mui/icons-material/Title"; 
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import TravelExploreIcon from '@mui/icons-material/TravelExplore';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Carousel } from 'react-responsive-carousel';
 
-const DiaryItem = ({
-  title,
-  description,
-  image,
-  location,
-  date,
-  id,
-  user,
-  onPostDelete
-}) => {
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import "./DiaryCard.css";
+import { Link } from "react-router-dom";
+
+const DiaryItem = ({ title, images, location, id, user, onPostDelete }) => {
   const [open, setOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const isLoogedInUser = () => {
     const userIdFromStorage = localStorage.getItem("userId");
-  
+
     if (userIdFromStorage === user._id) {
       return true;
     }
     return false;
   };
 
+  const handleOpenConfirm = () => {
+    setConfirmOpen(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setConfirmOpen(false);
+  };
+
   const handleDelete = () => {
-    postDelete(id)
+    deletePost(id)
       .then((data) => {
         console.log(data);
         onPostDelete(id);
       })
       .catch((err) => console.log(err));
     setOpen(true);
+    setConfirmOpen(false);
   };
 
   return (
-    <Card
-      sx={{
-        maxWidth: { sm: "auto", md: "22%" },
-        height: "auto",
-        display: "flex",
-        margin: 1.5,  
-        flexDirection: "column",
-        boxShadow: "5px 5px 15px #ccc",
-        borderRadius: "10px",
-      }}
-    >
-      <CardMedia
-        component="img"
-        height="auto"
-        image={image}
-        alt={title}
-        sx={{
-          objectFit: "cover",
-          borderRadius: "10px 10px 0 0",
-          maxHeight: { sm: "auto", md: "220px" }
-        }}
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h6" component="div">
-          {title}
-        </Typography>
-        <Typography variant="subtitle2" color="text.secondary">
-          {location} · {date}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {description.substring(0, 35)}...
-        </Typography>
-      </CardContent>
-      <CardActions sx={{ marginLeft: "auto", marginRight: 1, marginTop: 1 }}>
-        {isLoogedInUser() && (
-          <>
-            <IconButton LinkComponent={Link} to={`/post/${id}`} color="warning">
-              <ModeEditOutlineIcon />
-            </IconButton>
-            <IconButton onClick={handleDelete} color="error">
-              <DeleteForeverIcon />
-            </IconButton>
-          </>
-        )}
-      </CardActions>
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={() => setOpen(false)}
-      >
-        <Alert
-          onClose={() => setOpen(false)}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Post was successfully deleted!
-        </Alert>
-      </Snackbar>
-    </Card>
+<div className="card">
+      <div className="imgBx">
+        <Carousel showIndicators={false} showThumbs={false} infiniteLoop={true}>
+          {images.map((img, index) => (
+            <div key={index}>
+              <img src={img.url} alt="images" />
+            </div>
+          ))}
+        </Carousel>
+      </div>
+
+      <div className="content">
+        <span className="price">
+          <Link to={`/post/${id}`}><TravelExploreIcon fontSize="medium" /></Link>
+        </span>
+        <ul className="text diary-card-ul">
+        <li>
+            <TitleIcon /> <b>{title}</b>  
+          </li>
+          <li>
+            <LocationOnIcon /> {location}  
+          </li>
+          <li>
+          <AccountCircleIcon /> {user.firstname}
+          </li>
+          <li className="right-align">
+            <CardActions>
+              {isLoogedInUser() && (
+                <>
+                  <IconButton
+                    component={Link}
+                    to={`/edit/${id}`}
+                    color="warning"
+                  >
+                    <ModeEditOutlineIcon />
+                  </IconButton>
+                  <IconButton onClick={handleOpenConfirm} color="error">
+                    <DeleteForeverIcon />
+                  </IconButton>
+                </>
+              )}
+            </CardActions>
+            <Snackbar
+              open={open}
+              autoHideDuration={6000}
+              onClose={() => setOpen(false)}
+            >
+              <Alert
+                onClose={() => setOpen(false)}
+                severity="success"
+                sx={{ width: "100%" }}
+              >
+                Post was successfully deleted!
+              </Alert>
+            </Snackbar>
+          </li>
+
+          <Dialog open={confirmOpen} onClose={handleCloseConfirm}>
+            <DialogTitle>{"Confirm Delete"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to delete this post?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseConfirm}>Cancel</Button>
+              <Button onClick={handleDelete} color="error">
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </ul>
+      </div>
+    </div>
   );
 };
 

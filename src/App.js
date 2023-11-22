@@ -15,6 +15,7 @@ import { UserList } from './auth/pages/userList/UserList';
 
 import Add from "./diaries/Add";
 import Diaries from "./diaries/Diaries";
+import DiaryDetail from "./diaries/diariesDetails/DiaryDetail";
 import DiaryUpdate from "./diaries/DiaryUpdate";
 import Header from "./header/Header";
 import Home from "./home/Home";
@@ -25,6 +26,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getLoginStatus, getUser, selectIsLoggedIn, selectUser } from './auth/redux/features/auth/authSlice';
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
+
 
 axios.defaults.withCredentials = true;
 
@@ -54,6 +56,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/diaries" element={<Diaries />} />
+          <Route path="/post/:id" element={<DiaryDetail />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/forgot" element={<Forgot />} />
             <Route path="/resetPassword/:resetToken" element={<Reset />} />
@@ -74,7 +77,7 @@ function App() {
             <>
               <Route path="/add" element={<Add />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/post/:id" element={<DiaryUpdate />} />{" "}
+              <Route path="/edit/:id" element={<DiaryUpdate />} />{" "}
             </>
           )}
         </Routes>

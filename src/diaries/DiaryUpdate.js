@@ -1,28 +1,32 @@
 import { Button, FormLabel, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getPostDetails, postUpdate } from "../api-helpers/helpers";
+import { useParams, useNavigate } from "react-router-dom";
+import { deleteImage, getPostDetails, updatePost } from "../api-helpers/helpers";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import { toast } from "react-toastify";
 
 const DiaryUpdate = () => {
+  const navigate = useNavigate();
   const [post, setPost] = useState();
   const [inputs, setInputs] = useState({
     title: "",
     description: "",
     location: "",
-    imageUrl: "",
   });
+  const [file, setFile] = useState(null);
+  const [previewSource, setPreviewSource] = useState([]);
   const id = useParams().id;
+
   useEffect(() => {
     getPostDetails(id)
       .then((data) => {
+        console.log("Post data: ", data);
         setPost(data.post);
 
         setInputs({
           title: data.post.title,
           description: data.post.description,
-          imageUrl: data.post.image,
           location: data.post.location,
         });
       })
@@ -30,24 +34,90 @@ const DiaryUpdate = () => {
   }, [id]);
 
   const handleChange = (e) => {
-    setInputs((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
+    if (e.target.name === "images") {
+      setFile(Array.from(e.target.files));
+      setPreviewSource(
+        e.target.files.length > 0
+          ? Array.from(e.target.files).map((file) => URL.createObjectURL(file))
+          : []
+      );
+    } else {
+      setInputs((prevState) => ({
+        ...prevState,
+        [e.target.name]: e.target.value,
+      }));
+    }
   };
+
+  const handleDeletePreview = (index) => {
+    setPreviewSource((prev) => prev.filter((src, i) => i !== index));
+    setFile((prev) => prev.filter((file, i) => i !== index));
+  };
+
+  const handleDeleteImage = (public_id) => {
+    // Delete the image from the post state
+    setPost((prevPost) => {
+      return {
+        ...prevPost,
+        images: prevPost.images.filter((image) => image.public_id !== public_id),
+      };
+    });
+  
+    // Send a request to the backend to delete the image from Cloudinary
+    deleteImage(public_id)
+      .then((data) => {
+        if(data) {
+          console.log("Image deleted successfully: ", data);
+          toast.success("Image deleted successfully");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Failed to delete image");
+      });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    postUpdate(inputs, id)
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+
+    const formData = new FormData();
+    formData.append("title", inputs.title);
+    formData.append("description", inputs.description);
+    formData.append("location", inputs.location);
+    if (file) {
+      file.forEach((f, index) => {
+        formData.append("images", f);
+      });
+    }
+
+    updatePost(id, formData)
+      .then((data) => {
+        console.log("Post updated successfully: ", data);
+        toast.success("Post updated successfully");
+        navigate("/diaries");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Failed to update post");
+      });
   };
+
   return (
-    <Box display="flex" flexDirection={"column"} width="100%" height="100%" sx={{ backgroundColor: "white" }}>
-      <Box display="flex" margin="auto" padding={2}>
+    <Box
+      display="flex"
+      flexDirection={"column"}
+      width="100%"
+      height="auto"
+      sx={{ backgroundColor: "white" }}
+    >
+      <Box display="flex" margin="auto" paddingTop={10}>
         <Typography
           fontWeight={"bold"}
           variant="h4"
           fontFamily={"dancing script"}
+          sx={{
+            color: "#333",
+          }}
         >
           Add Your Travel Diary
         </Typography>
@@ -60,7 +130,7 @@ const DiaryUpdate = () => {
           <Box
             padding={3}
             display="flex"
-            width="80%"
+            width="60%"
             margin="auto"
             flexDirection={"column"}
           >
@@ -80,15 +150,32 @@ const DiaryUpdate = () => {
               variant="standard"
               margin="normal"
             />
-            <FormLabel sx={{ fontFamily: "quicksand" }}>Image URL</FormLabel>
-            <TextField
-              onChange={handleChange}
-              name="imageUrl"
-              value={inputs.imageUrl}
-              variant="standard"
-              margin="normal"
-            />
-
+            <FormLabel sx={{ fontFamily: "quicksand" }}>Image</FormLabel>
+            <input type="file" name="images" onChange={handleChange} multiple />
+            <Box className="imgPrevUpdate">
+            {previewSource.map((src, index) => (
+              <div key={index}>
+                <img src={src} alt="" className="imgPrev" />
+                <button
+                  onClick={() => handleDeletePreview(index)}
+                  className="deleteImgPrev"
+                >
+                  X
+                </button>
+              </div>
+            ))}
+          </Box>
+            <FormLabel sx={{ fontFamily: "quicksand" }}>Old Images</FormLabel>
+            <Box className="imgPrevUpdate">
+              {post.images.map((image, index) => (
+                <div key={index}>
+                  <img src={image.url} alt="" className="imgPrev" />
+                  <button className="deleteImgPrev" onClick={() => handleDeleteImage(image.public_id)}>
+  X
+</button>
+                </div>
+              ))}
+            </Box>
             <FormLabel sx={{ fontFamily: "quicksand" }}>Location</FormLabel>
             <TextField
               onChange={handleChange}

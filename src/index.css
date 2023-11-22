@@ -13,9 +13,32 @@ body {
 * {
   margin: 0;
   padding: 0;
-
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+/* Scroll Bar */
+
+::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(66, 66, 66, 0.2);
+  border: 0px;
+  background-clip: padding-box;
+  border-radius: 5px;
+}
+
+@media screen and (max-width: 768px) {
+  .css-1160xiw-MuiPaper-root-MuiDrawer-paper {
+    padding: 15vh;
+  }
 }

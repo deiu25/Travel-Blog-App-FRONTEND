@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./Header.css";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { RESET, logout } from "../../redux/features/auth/authSlice";
@@ -26,7 +26,7 @@ export const Header = () => {
     <header>
       <nav>
         <div className="logo" onClick={goHome}>
-          <h1>SyntaxSeeker</h1>
+          <h1>Travel Blog</h1>
         </div>
         <input type="checkbox" id="checkbox" />
         <label htmlFor="checkbox" id="icon">
