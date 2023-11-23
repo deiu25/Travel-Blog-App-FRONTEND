@@ -349,6 +349,12 @@
   .DD-slider .DD-wrapper .DD-left > div h2 {
     font-size: 2rem;
   }
+
+  .carousel .slide img {
+    width: 100%;
+    height: 80vh;
+    object-fit: cover;
+  }
 }
 
 @media screen and (max-width: 600px) {
@@ -360,6 +366,12 @@
   @media screen and (max-width: 400px) {
     .DD-slider .DD-wrapper .DD-left > div h2 {
       font-size: 1.2rem;
+    }
+
+    .carousel .slide img {
+      width: 100%;
+      height: 50vh;
+      object-fit: cover;
     }
 }
 
