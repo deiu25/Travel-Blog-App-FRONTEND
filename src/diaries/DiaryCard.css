@@ -365,7 +365,12 @@
   }
 
   .DD-slider .DD-wrapper .DD-left > div {
-    padding: 0 40px 0 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0px 90px 0px 40px;
+    overflow: scroll;
+    padding-bottom: 20vh;
   }
 }
 
@@ -392,14 +397,14 @@
 
 @media screen and (min-width: 300px) {
   .DD-image {
-    height: 100vh;
+    height: 80vh;
     object-fit: contain;
   }
 }
 
 @media screen and (min-width: 200px) {
   .DD-image {
-    height: 100vh;
+    height: 80vh;
     object-fit: contain;
   }
 }
