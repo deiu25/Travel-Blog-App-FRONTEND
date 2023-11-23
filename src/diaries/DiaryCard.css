@@ -259,6 +259,7 @@
 }
 
 .DD-slider .DD-wrapper .DD-left > div h2 {
+  font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 25px;
   background: -webkit-linear-gradient(90deg, #0cbaba, #380036);
@@ -344,6 +345,22 @@
     object-fit: cover;
     border-radius: 10px;
   }
+
+  .DD-slider .DD-wrapper .DD-left > div h2 {
+    font-size: 2rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .DD-slider .DD-wrapper .DD-left > div h2 {
+    font-size: 1.6rem;
+  }
+}
+
+  @media screen and (max-width: 400px) {
+    .DD-slider .DD-wrapper .DD-left > div h2 {
+      font-size: 1.2rem;
+    }
 }
 
 /* Diary Update */
