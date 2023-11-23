@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { deletePost } from "../api-helpers/helpers";
 import {
   Alert,
@@ -14,13 +17,11 @@ import {
 } from "@mui/material";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import TitleIcon from "@mui/icons-material/Title"; 
+import TitleIcon from "@mui/icons-material/Title";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import TravelExploreIcon from '@mui/icons-material/TravelExplore';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Carousel } from 'react-responsive-carousel';
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./DiaryCard.css";
 import { Link } from "react-router-dom";
 
@@ -56,31 +57,42 @@ const DiaryItem = ({ title, images, location, id, user, onPostDelete }) => {
     setConfirmOpen(false);
   };
 
+  const settings = {
+    dots: false,
+    lazyLoad: "ondemand",
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
   return (
-<div className="card">
+    <div className="card">
       <div className="imgBx">
-        <Carousel showIndicators={false} showThumbs={false} infiniteLoop={true}>
+        <Slider {...settings}>
           {images.map((img, index) => (
             <div key={index}>
               <img src={img.url} alt="images" />
             </div>
           ))}
-        </Carousel>
+        </Slider>
       </div>
 
       <div className="content">
         <span className="price">
-          <Link to={`/post/${id}`}><TravelExploreIcon fontSize="medium" /></Link>
+          <Link to={`/post/${id}`}>
+            <TravelExploreIcon fontSize="medium" />
+          </Link>
         </span>
         <ul className="text diary-card-ul">
-        <li>
-            <TitleIcon /> <b>{title}</b>  
+          <li>
+            <TitleIcon /> <b>{title}</b>
           </li>
           <li>
-            <LocationOnIcon /> {location}  
+            <LocationOnIcon /> {location}
           </li>
           <li>
-          <AccountCircleIcon /> {user.firstname}
+            <AccountCircleIcon /> {user.firstname}
           </li>
           <li className="right-align">
             <CardActions>
