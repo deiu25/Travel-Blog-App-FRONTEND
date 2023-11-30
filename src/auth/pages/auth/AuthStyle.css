@@ -85,6 +85,7 @@ h6 span {
 .full-height {
   min-height: 100vh;
 }
+
 [type="checkbox"]:checked,
 [type="checkbox"]:not(:checked) {
   position: absolute;
@@ -192,7 +193,7 @@ h6 span {
   width: 100%;
   height: 100%;
   background-color: #2a2b38;
-  background-image: url('../../../../public/bg.svg');
+  background-image: url("../../../../public/bg.svg");
   background-position: bottom center;
   background-repeat: no-repeat;
   background-size: 300%;
@@ -250,8 +251,6 @@ h6 span {
 
 .form-group-flex {
   display: flex;
-  justify-content: space-between;
-  gap: 1rem;
 }
 
 .form-group {
@@ -454,6 +453,12 @@ h6 span {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+}
+
+#gsi_527018_627328 {
+  width: 100%;
+  max-width: auto;
 }
 
 .authTitle {
@@ -535,14 +540,40 @@ h6 span {
   cursor: pointer;
 }
 
+@media (max-width: 346px) {
+  .custom-class-2 {
+    padding-top: 0.1px;
+  }
+
+  .custom-class {
+    padding-top: none!important;
+  }
+
+  .card-front,
+  .card-back {
+    width: 100%;
+    height: 130%!important;
+  }
+
+  .custom-section {
+    height: 130vh !important;
+  }
+}
+
 @media (max-width: 450px) {
   .name-group {
     display: flex !important;
     flex-direction: column !important;
-    gap: 1rem;
   }
+
   .card-3d-wrap {
     height: 620px;
+  }
+
+  .card-front,
+  .card-back {
+    width: 100%;
+    height: 105%;
   }
 }
 
@@ -584,7 +615,6 @@ h6 span {
   }
 }
 
-/* Pentru ecranele medii (tablete), s-ar putea să dorești să ajustezi padding-ul */
 @media (min-width: 601px) and (max-width: 1024px) {
   .custom-class {
     padding-top: 2rem;
@@ -593,7 +623,6 @@ h6 span {
   }
 }
 
-/* Pentru ecranele mari (desktop), padding-ul este cel original */
 @media (min-width: 1025px) {
   .custom-class {
     padding-top: 3rem;

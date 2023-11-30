@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = "https://travel-backend-shv1.onrender.com";
-//const BACKEND_URL = "https://backend.dinhub.ro";
+const BACKEND_URL = "http://localhost:5000";
 export const API_URL = `${BACKEND_URL}/api/users/`;
 
 // Validate email
@@ -97,6 +96,13 @@ const getUsers = async () => {
   return response.data;
 };
 
+//isVerified: 
+const isVerified = async () => {
+  const response = await axios.get(API_URL + "isVerified");
+
+  return response.data;
+};
+
 // Delete User
 const deleteUser = async (id) => {
   const response = await axios.delete(API_URL + id);
@@ -150,6 +156,7 @@ const authService = {
   forgotPassword,
   resetPassword,
   getUsers,
+  isVerified,
   deleteUser,
   upgradeUser,
   sendLoginCode,
